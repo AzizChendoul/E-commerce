@@ -5,9 +5,10 @@ French, and a private admin dashboard where every piece of site content —
 text, logo, images, products, sections — is editable. Nothing shown on the
 storefront is hardcoded.
 
-> **Status: Phase 1 of 7 complete.** The foundation is in place and verified:
-> locale routing with RTL, design tokens, theming, database and auth wiring,
-> and the check suite. The data model, admin and storefront are not built yet.
+> **Status: Phase 2 of 7 complete.** The foundation and the data model are in
+> place and verified: locale routing with RTL, design tokens, theming, the full
+> Prisma schema with constraints and Row Level Security, and a seeded demo
+> catalogue in three languages. The admin and the storefront are not built yet.
 > See [Roadmap](#roadmap).
 
 ## Stack
@@ -73,7 +74,7 @@ npm run check:contrast   # every colour pair meets WCAG 2.1
 npm run db:generate      # prisma generate
 npm run db:migrate       # prisma migrate dev   (needs DIRECT_URL)
 npm run db:deploy        # prisma migrate deploy
-npm run db:seed          # seed demo data       (Phase 2)
+npm run db:seed          # seed demo content (idempotent)
 npm run db:studio        # prisma studio
 ```
 
@@ -87,6 +88,79 @@ knowing about:
 - **`check:contrast`** — asserts 15 colour pairs per theme against WCAG 2.1
   minimums. The design system's generated palette shipped three failures; this
   keeps them from coming back.
+
+## Data model
+
+`prisma/schema.prisma` is the source of truth. Four conventions run through it,
+and each is spelled out at the top of the file:
+
+- **Money is an integer in the currency's minor unit** — millimes for TND. Never
+  a float.
+- **Translations** come in two shapes, chosen by a rule rather than case by
+  case. Content edited as a record of its own — products, categories,
+  testimonials, content blocks, delivery zones — gets a `*Translation` table, so
+  adding a fourth language is a data change rather than a migration. Short
+  incidental strings — image alt text, order line snapshots — use a `Json`
+  locale map validated by Zod at the boundary.
+- **Ids are UUID v7**, time-ordered, so inserts land at the right-hand edge of
+  the index instead of scattering across it.
+- **Nothing an order points at is hard-deleted.** Product and customer
+  references use `SetNull`, and each order line carries its own snapshot of the
+  name and price at purchase.
+
+### Migrations
+
+Two migrations ship the initial schema:
+
+| Migration                     | Contents                                                                                                    |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `…_init`                      | 22 tables, 51 indexes, 24 foreign keys. Generated from the schema.                                          |
+| `…_constraints_sequences_rls` | Hand-written: check constraints, partial unique indexes, the order-number sequence, and Row Level Security. |
+
+The second exists because none of it is expressible in a Prisma schema. It is
+still a migration — it runs in order, in every environment, and is never applied
+by hand in the Supabase SQL editor.
+
+**On Row Level Security**, the threat model is not the obvious one. Prisma
+connects as the database owner, which has `BYPASSRLS`, so none of these policies
+constrain the application's own queries — admin authorisation is enforced in
+server code, on every admin route and every mutation. What RLS protects is the
+other door: Supabase exposes every table in `public` through PostgREST,
+reachable from any browser with the anon key, which is public by design. Without
+it, `GET /rest/v1/orders` hands every customer's name, phone and address to
+anyone who opens dev tools.
+
+So every table has RLS enabled, and `SELECT` policies exist only for data the
+storefront already shows: published products and their translations and images,
+active categories, published testimonials, content blocks, active delivery
+zones. There is no `INSERT`, `UPDATE` or `DELETE` policy anywhere.
+
+**Order numbers** come from a Postgres sequence via `next_order_number()`, not
+from counting rows: two concurrent checkouts reading the same count produce the
+same number. Gaps are expected — an order number identifies an order, it does
+not count them.
+
+### Seeding
+
+```bash
+npm run db:seed
+```
+
+Seeds a demo catalogue of a Tunisian artisan homeware shop: 5 suppliers, 7
+categories, 24 products, 12 delivery zones, 5 testimonials, 23 content blocks
+and 16 settings — every translatable field written in all three languages.
+
+The script is **idempotent**. Every write is an upsert on a stable natural key,
+so running it twice produces the same database as running it once, and editing
+the text in `prisma/seed/data/` and re-running updates rows rather than
+duplicating them. It never truncates.
+
+Product photography is generated, not sourced: `node scripts/generate-seed-images.mjs`
+renders abstract placeholders from SVG in the design system's own palette. They
+are deliberately not photographs, so nobody mistakes one for a real product.
+
+Admin accounts are **not** seeded. Credentials belong to Supabase Auth, which
+owns `auth.users`; the bootstrap ships with the auth module in Phase 3.
 
 ## Layout
 
@@ -105,7 +179,11 @@ lib/
   money.ts             integer minor units, locale formatting
   prisma.ts            lazy singleton client
 messages/              ar.json, en.json, fr.json
-prisma/                schema and migrations
+prisma/
+  schema.prisma        the data model
+  migrations/          init, then constraints + RLS
+  seed.ts              idempotent seeding
+  seed/data/           demo content, all three locales
 design-system/         MASTER.md, page overrides, contrast checker
 scripts/               repository checks
 ```
