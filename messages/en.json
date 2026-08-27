@@ -1,0 +1,58 @@
+{
+  "Metadata": {
+    "title": "Souk",
+    "description": "A multilingual storefront."
+  },
+  "Common": {
+    "loading": "Loading",
+    "error": "Something went wrong",
+    "retry": "Try again",
+    "showMore": "Show more",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "search": "Search",
+    "skipToContent": "Skip to content"
+  },
+  "Nav": {
+    "home": "Home",
+    "products": "Products",
+    "cart": "Cart",
+    "contact": "Contact",
+    "trackOrder": "Track order",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "LocaleSwitcher": {
+    "label": "Change language",
+    "current": "Current language: {locale}"
+  },
+  "Theme": {
+    "label": "Change theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "Home": {
+    "heroEyebrow": "Scaffold",
+    "heroTitle": "The foundation is in place",
+    "heroBody": "Locale routing, direction, design tokens and theming are wired up. Page content is not built yet — it arrives in a later phase, and every string on it will come from the database.",
+    "tokensHeading": "Design tokens",
+    "tokensBody": "Every colour below resolves through a CSS variable. No component holds a hex value.",
+    "directionHeading": "Direction",
+    "directionBody": "This page is rendered {dir}. Switch to Arabic and the layout mirrors — no component reads left or right."
+  },
+  "Footer": {
+    "rights": "All rights reserved."
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "body": "This page does not exist, or it moved.",
+    "backHome": "Back to the store"
+  },
+  "Error": {
+    "title": "Something went wrong",
+    "body": "The page could not be loaded. Try again, and if it keeps happening let us know."
+  }
+}

@@ -1,0 +1,249 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ===========================================================================
+   DESIGN TOKENS
+   Source of truth: design-system/souk/MASTER.md
+   Verified by:     python3 design-system/scripts/check-contrast.py
+
+   Never write a raw hex value in a component. Every colour used anywhere in
+   the app resolves through one of the variables below.
+
+   NAMING NOTE — one deliberate divergence from MASTER.md:
+   shadcn/ui reserves `--accent` for a *subtle hover surface*, while MASTER.md
+   uses "Accent/CTA" for the gold call-to-action colour. Renaming shadcn's
+   token would break every component that ships with it, so:
+
+       MASTER.md "Primary"    -> --primary      (#1C1917 near-black)
+       MASTER.md "Accent/CTA" -> --cta          (#A16207 gold)
+       shadcn "accent"        -> --accent       (hover surface, no MASTER equivalent)
+
+   Use `<Button variant="cta">` for the gold call to action.
+   =========================================================================== */
+
+:root {
+  /* --- Surfaces ------------------------------------------------------- */
+  --background: #fafaf9;
+  --foreground: #0c0a09;
+  --card: #ffffff;
+  --card-foreground: #0c0a09;
+  --popover: #ffffff;
+  --popover-foreground: #0c0a09;
+
+  /* --- Brand ---------------------------------------------------------- */
+  --primary: #1c1917;
+  --primary-foreground: #ffffff; /* 17.49:1 */
+  --secondary: #44403c;
+  --secondary-foreground: #ffffff; /* 10.27:1 */
+
+  /* --- Call to action (MASTER.md "Accent/CTA") ------------------------- */
+  --cta: #a16207;
+  --cta-foreground: #ffffff; /* 4.92:1 */
+
+  /* --- Subtle surfaces ------------------------------------------------ */
+  --muted: #f5f5f4;
+  --muted-foreground: #57534e; /* 7.30:1 on background */
+  --accent: #f5f5f4; /* shadcn hover surface */
+  --accent-foreground: #1c1917;
+
+  /* --- Feedback ------------------------------------------------------- */
+  --destructive: #b91c1c; /* darkened from #dc2626, which is 4.06:1 with white */
+  --destructive-foreground: #ffffff; /* 6.47:1 */
+  --success: #15803d;
+  --success-foreground: #ffffff;
+  --warning: #a16207;
+  --warning-foreground: #ffffff;
+
+  /* --- Lines ----------------------------------------------------------
+     --border is a decorative hairline between surfaces that are already
+     distinguished by their own background; WCAG 1.4.11 does not apply.
+     --input is the ONLY indicator of a form control and must clear 3:1. */
+  --border: #d6d3d1;
+  --input: #8c8681; /* 3.44:1 on background */
+  --ring: #1c1917; /* 16.74:1 */
+
+  /* --- Radius --------------------------------------------------------- */
+  --radius: 0.5rem;
+
+  /* --- Line height, per script ----------------------------------------
+     Arabic sits taller than Latin and needs more leading at the same size.
+     These are redefined under :lang(ar) below; the type scale references
+     them, so every size adapts with one rule instead of per-component
+     overrides. */
+  --leading-display: 1.1;
+  --leading-heading: 1.25;
+  --leading-body: 1.6;
+
+  /* --- Font stacks -----------------------------------------------------
+     --font-latin / --font-arabic are injected by next/font in
+     app/[locale]/layout.tsx. Latin locales lead with Inter and fall back to
+     the Arabic face for stray glyphs; :lang(ar) reverses the order. */
+  --font-sans: var(--font-latin), var(--font-arabic), system-ui, sans-serif;
+}
+
+:root:lang(ar) {
+  --leading-display: 1.3;
+  --leading-heading: 1.45;
+  --leading-body: 1.8;
+  --font-sans: var(--font-arabic), var(--font-latin), system-ui, sans-serif;
+}
+
+.dark {
+  --background: #0c0a09;
+  --foreground: #fafaf9;
+  --card: #1c1917;
+  --card-foreground: #fafaf9;
+  --popover: #1c1917;
+  --popover-foreground: #fafaf9;
+
+  --primary: #fafaf9; /* inverted: a light surface on a dark page */
+  --primary-foreground: #1c1917; /* 16.74:1 */
+  --secondary: #292524;
+  --secondary-foreground: #e7e5e4; /* 12.08:1 */
+
+  --cta: #d6a312; /* brightened; #a16207 is too dark on a dark page */
+  --cta-foreground: #1c1917; /* 7.58:1 */
+
+  --muted: #292524;
+  --muted-foreground: #a8a29e; /* 7.83:1 on background */
+  --accent: #292524;
+  --accent-foreground: #fafaf9;
+
+  --destructive: #f87171;
+  --destructive-foreground: #1c1917; /* 6.32:1 */
+  --success: #4ade80;
+  --success-foreground: #1c1917;
+  --warning: #d6a312;
+  --warning-foreground: #1c1917;
+
+  --border: #44403c;
+  --input: #78716c; /* 4.12:1 on background */
+  --ring: #d6d3d1; /* 13.26:1 */
+}
+
+/* ===========================================================================
+   TAILWIND THEME
+   `inline` keeps the var() reference in the emitted utility, so redefining a
+   variable under .dark or :lang(ar) updates every utility that uses it.
+   =========================================================================== */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-cta: var(--cta);
+  --color-cta-foreground: var(--cta-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-sans);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Type scale: base 16px, 1.25 major third. Line-heights resolve through
+     the per-script variables above. */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: var(--leading-body);
+  --text-sm: 0.875rem;
+  --text-sm--line-height: var(--leading-body);
+  --text-base: 1rem;
+  --text-base--line-height: var(--leading-body);
+  --text-lg: 1.125rem;
+  --text-lg--line-height: var(--leading-body);
+  --text-xl: 1.25rem;
+  --text-xl--line-height: var(--leading-heading);
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: var(--leading-heading);
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: var(--leading-heading);
+  --text-4xl: 2.25rem;
+  --text-4xl--line-height: var(--leading-display);
+  --text-5xl: 3rem;
+  --text-5xl--line-height: var(--leading-display);
+  --text-6xl: 3.75rem;
+  --text-6xl--line-height: var(--leading-display);
+}
+
+/* ===========================================================================
+   BASE
+   =========================================================================== */
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    /* Anchor links and programmatic scrolls animate, unless the reader has
+       asked them not to (handled by the reduced-motion block below). */
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+    /* Never below 16px: iOS Safari zooms the viewport on focus for anything
+       smaller, which breaks the layout mid-form. */
+    font-size: var(--text-base);
+  }
+
+  /* A visible focus ring on every keyboard-focused element. Removing focus
+     rings is on the anti-pattern list; `:focus-visible` keeps them off mouse
+     clicks without hiding them from keyboard users. */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+
+  /* Headings inherit the display/heading leading through the type scale, so
+     they need no per-element line-height. Arabic is cursive: tightening the
+     tracking breaks the letter joins, so negative letter-spacing is scoped
+     away from it rather than applied globally. */
+  :where(h1, h2, h3):not(:lang(ar)) {
+    letter-spacing: -0.02em;
+  }
+
+  /* Numerals inside RTL text keep their own direction. Wrap prices, SKUs,
+     phone and order numbers in <bdi> and this holds automatically. */
+  bdi {
+    unicode-bidi: isolate;
+  }
+}
+
+/* Honour the reader's motion preference everywhere, including third-party
+   components that animate without asking. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

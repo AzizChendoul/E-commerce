@@ -1,0 +1,58 @@
+{
+  "Metadata": {
+    "title": "Souk",
+    "description": "Une boutique multilingue."
+  },
+  "Common": {
+    "loading": "Chargement",
+    "error": "Une erreur est survenue",
+    "retry": "Réessayer",
+    "showMore": "Voir plus",
+    "close": "Fermer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "search": "Rechercher",
+    "skipToContent": "Aller au contenu"
+  },
+  "Nav": {
+    "home": "Accueil",
+    "products": "Produits",
+    "cart": "Panier",
+    "contact": "Contact",
+    "trackOrder": "Suivre ma commande",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu"
+  },
+  "LocaleSwitcher": {
+    "label": "Changer de langue",
+    "current": "Langue actuelle : {locale}"
+  },
+  "Theme": {
+    "label": "Changer de thème",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système"
+  },
+  "Home": {
+    "heroEyebrow": "Structure",
+    "heroTitle": "Les fondations sont posées",
+    "heroBody": "Le routage par langue, la direction, les jetons de design et le thème sont en place. Le contenu des pages viendra dans une phase ultérieure, et chaque texte proviendra de la base de données.",
+    "tokensHeading": "Jetons de design",
+    "tokensBody": "Chaque couleur ci-dessous passe par une variable CSS. Aucun composant ne contient de valeur hexadécimale.",
+    "directionHeading": "Direction",
+    "directionBody": "Cette page est rendue en {dir}. Passez à l'arabe et la mise en page se reflète — aucun composant ne connaît la gauche ni la droite."
+  },
+  "Footer": {
+    "rights": "Tous droits réservés."
+  },
+  "NotFound": {
+    "title": "Page introuvable",
+    "body": "Cette page n'existe pas ou a été déplacée.",
+    "backHome": "Retour à la boutique"
+  },
+  "Error": {
+    "title": "Une erreur est survenue",
+    "body": "La page n'a pas pu être chargée. Réessayez, et si le problème persiste, prévenez-nous."
+  }
+}

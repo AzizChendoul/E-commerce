@@ -1,0 +1,21 @@
+// Prisma is the single source of truth for the database schema. Nothing is
+// created by hand in the Supabase SQL editor; every change goes through a
+// migration in prisma/migrations so environments stay reproducible.
+//
+// The data model itself lands in Phase 2. This file currently establishes the
+// generator and the datasource provider only.
+//
+// Note for anyone used to Prisma 6 and earlier: the datasource block carries
+// no `url` and no `directUrl`. Prisma 7 takes connection strings from two
+// places instead —
+//   * the running app  -> a driver adapter, see lib/prisma.ts (pooled)
+//   * the CLI          -> prisma.config.ts (direct)
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}

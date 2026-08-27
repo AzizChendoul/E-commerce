@@ -1,0 +1,7 @@
+.next
+node_modules
+package-lock.json
+prisma/migrations
+.claude
+design-system
+lib/generated
