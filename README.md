@@ -29,18 +29,38 @@ Actions). There is no separate backend: one repository, one deployment.
 
 ## Getting started
 
-Requires Node.js 20+ and a Supabase project.
+Requires **Node.js 20.19+, 22.12+ or 24+** — the floor set by Next 16 and
+Prisma 7. Check with `node -v` before anything else.
 
 ```bash
-npm install                 # runs `prisma generate` afterwards
-cp .env.example .env.local  # then fill it in — see below
-npm run dev                 # http://localhost:3000
+npm install    # installs dependencies, then runs `prisma generate`
+npm run dev    # http://localhost:3000
 ```
 
-`/` redirects to a locale based on the `Accept-Language` header, so the first
-page you land on is `/ar`, `/en` or `/fr`.
+That is the whole setup. **No database and no `.env.local` are needed to run the
+app today**, because nothing rendered so far reads from one — the storefront
+arrives in Phase 5. Skip ahead to [Environment](#environment) only when you want
+to run migrations or the seed.
+
+`npm install` is not optional: `next` is a local dependency, so until it has run
+there is no `next` command and `npm run dev` fails with "`next` is not
+recognized" (or "command not found").
+
+`/` redirects to a locale from the `Accept-Language` header, so the first page
+you land on is `/ar`, `/en` or `/fr`. All three are reachable directly.
+
+### Windows
+
+Everything above works in PowerShell unchanged. One thing to watch: if the
+project sits inside a **OneDrive-synced folder** — `Documents` usually is —
+OneDrive will try to sync `node_modules`, which is tens of thousands of files.
+That makes installs slow and can make the dev server's file watching flaky.
+Cloning to a path outside OneDrive, such as `C:\dev\E-commerce`, avoids it.
 
 ### Environment
+
+Needed for `db:migrate`, `db:deploy`, `db:seed` and `db:studio` — not for
+`npm run dev`. Copy `.env.example` to `.env.local` and fill it in.
 
 Every variable is documented in [`.env.example`](.env.example). The one that
 catches people out is the pair of connection strings:
